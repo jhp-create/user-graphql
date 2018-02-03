@@ -113,18 +113,35 @@ const mutation = new GraphQLObjectType({
       type: UserType,
       args: {
         id: { type: new GraphQLNonNull(GraphQLString) },
-        friendId: { type: new GraphQLNonNull(GraphQLString) }
+        addId: { type: new GraphQLNonNull(GraphQLString) }
       },
-      async resolve(parentValue, { id, friendId }) {
+      async resolve(parentValue, { id, addId }) {
         const user = await axios.get(`http://localhost:3000/users/${id}`).then(res => res.data);
-        const user2 = await axios.get(`http://localhost:3000/users/${friendId}`).then(res => res.data);
-        const newFriendsList = user.friends.includes(friendId) ? [...user.friends] : [...user.friends, friendId];
+        const user2 = await axios.get(`http://localhost:3000/users/${addId}`).then(res => res.data);
+        const newFriendsList = user.friends.includes(addId) ? [...user.friends] : [...user.friends, addId];
         const newFriendsList2 = user2.friends.includes(id) ? [...user2.friends] : [...user2.friends, id];
-        axios.patch(`http://localhost:3000/users/${friendId}`, { friends: newFriendsList2 })
+        axios.patch(`http://localhost:3000/users/${addId}`, { friends: newFriendsList2 })
           .then(res => res.data);
         return axios.patch(`http://localhost:3000/users/${id}`, { friends: newFriendsList })
           .then(res => res.data);
       }
+    },
+    removeFriend: {
+      type: UserType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        removeId: { type: new GraphQLNonNull(GraphQLString) }
+      },
+      async resolve(parentValue, { id, removeId }) {
+        const user = await axios.get(`http://localhost:3000/users/${id}`).then(res => res.data);
+        const user2 = await axios.get(`http://localhost:3000/users/${removeId}`).then(res => res.data);
+        const newFriendsList = user.friends.includes(removeId) ? user.friends.filter(id => id !== removeId) : [...user.friends];
+        const newFriendsList2 = user2.friends.includes(id) ? user2.friends.filter(x => x !== id) : [...user2.friends];
+        axios.patch(`http://localhost:3000/users/${removeId}`, { friends: newFriendsList2 })
+          .then(res => res.data);
+        return axios.patch(`http://localhost:3000/users/${id}`, { friends: newFriendsList })
+          .then(res => res.data);
+      } 
     }
   }
 });

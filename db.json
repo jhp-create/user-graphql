@@ -4,23 +4,27 @@
       "id": "41",
       "firstName": "Samantha",
       "age": 50,
-      "companyId": "2"
+      "companyId": "2",
+      "friends": ["_VyKr~s", "ngWXU4t"]
     },
     {
       "firstName": "Stephen",
       "age": 26,
-      "id": "_VyKr~s"
+      "id": "_VyKr~s",
+      "friends": ["41"]
     },
     {
       "firstName": "Julius",
       "age": 31,
       "id": "ngWXU4t",
-      "companyId": "2"
+      "companyId": "2",
+      "friends": ["41", "MCf7ZmD"]
     },
     {
       "firstName": "Eugene",
       "age": 18,
-      "id": "MCf7ZmD"
+      "id": "MCf7ZmD",
+      "friends": ["ngWXU4t"]
     }
   ],
   "companies": [

@@ -38,6 +38,13 @@ const UserType = new GraphQLObjectType({
         return axios.get(`http://localhost:3000/companies/${parentValue.companyId}`)
           .then(resp => resp.data);
       }
+    },
+    friends: { 
+      type: new GraphQLList(UserType),
+      resolve(parentValue, args) {
+        return parentValue.friends.map(id => axios.get(`http://localhost:3000/users/${id}`)
+          .then(res => res.data));
+      } 
     }
   })
 });

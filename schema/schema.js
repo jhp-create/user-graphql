@@ -9,6 +9,13 @@ const {
   GraphQLNonNull
 } = graphql;
 
+const PostType = new GraphQLObjectType({
+  name: 'Post',
+  fields: () => ({
+    title: { type: GraphQLString },
+    content: { type: GraphQLString }
+  })
+});
 
 const CompanyType = new GraphQLObjectType({
   name: 'Company',
@@ -45,7 +52,8 @@ const UserType = new GraphQLObjectType({
         return parentValue.friends.map(id => axios.get(`http://localhost:3000/users/${id}`)
           .then(res => res.data));
       } 
-    }
+    },
+    posts: { type: new GraphQLList(PostType) }
   })
 });
 
@@ -142,6 +150,19 @@ const mutation = new GraphQLObjectType({
         return axios.patch(`http://localhost:3000/users/${id}`, { friends: newFriendsList })
           .then(res => res.data);
       } 
+    },
+    addPost: {
+      type: UserType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        title: { type: new GraphQLNonNull(GraphQLString) },
+        content: { type: new GraphQLNonNull(GraphQLString) }
+      },
+      async resolve(parentValue, { id, title, content }) {
+        const user = await axios.get(`http://localhost:3000/users/${id}`).then(res => res.data);
+        const newPostList = user.posts ? [...user.posts, { title, content }] : [{ title, content }]
+        return axios.patch(`http://localhost:3000/users/${id}`, { posts: newPostList }).then(res => res.data);
+      }
     }
   }
 });

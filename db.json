@@ -8,6 +8,13 @@
       "friends": [
         "_VyKr~s",
         "MCf7ZmD"
+      ],
+      "posts": [
+        {
+          "id": "123",
+          "title": "simple programmer",
+          "content": "Morbi dui velit, vehicula ut erat et, mattis a"
+        }
       ]
     },
     {
@@ -17,6 +24,12 @@
       "friends": [
         "41",
         "ngWXU4t"
+      ],
+      "posts": [
+        {
+          "title": "Carve Your Own Story",
+          "content": "Chad is joined by Curti Herbert, independent app developer"
+        }
       ]
     },
     {
@@ -27,6 +40,16 @@
       "friends": [
         "MCf7ZmD",
         "_VyKr~s"
+      ],
+      "posts": [
+        {
+          "title": "Bringing Your Whole Self To Work",
+          "content": "In today's episode, we'll be discussing the importance"
+        },
+        {
+          "title": "Container Instances with Gabe Monroy",
+          "content": "In 2011, platform-as-a-service was in its early days"
+        }
       ]
     },
     {

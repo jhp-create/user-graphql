@@ -12,6 +12,7 @@ const {
 const PostType = new GraphQLObjectType({
   name: 'Post',
   fields: () => ({
+    id: { type: GraphQLString },
     title: { type: GraphQLString },
     content: { type: GraphQLString }
   })
@@ -70,10 +71,10 @@ const RootQuery = new GraphQLObjectType({
     },
     company: {
       type: CompanyType,
-        args: { id: { type: GraphQLString } },
-        resolve(parentValue, args) {
-          return axios.get(`http://localhost:3000/companies/${args.id}`)
-            .then(resp => resp.data);
+      args: { id: { type: GraphQLString } },
+      resolve(parentValue, args) {
+        return axios.get(`http://localhost:3000/companies/${args.id}`)
+          .then(resp => resp.data);
       }
     }
   }
@@ -160,7 +161,20 @@ const mutation = new GraphQLObjectType({
       },
       async resolve(parentValue, { id, title, content }) {
         const user = await axios.get(`http://localhost:3000/users/${id}`).then(res => res.data);
-        const newPostList = user.posts ? [...user.posts, { title, content }] : [{ title, content }]
+        const postId = `${user.posts.length}${title.slice(0,4)}`
+        const newPostList = user.posts ? [...user.posts, { id: postId, title, content }] : [{ id: postId, title, content }]
+        return axios.patch(`http://localhost:3000/users/${id}`, { posts: newPostList }).then(res => res.data);
+      }
+    },
+    deletePost: {
+      type: UserType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        deleteId: { type: new GraphQLNonNull(GraphQLString) } 
+      },
+      async resolve(parentValue, { id, deleteId }) {
+        const user = await axios.get(`http://localhost:3000/users/${id}`).then(res => res.data);
+        const newPostList = user.posts ? user.posts.filter(post => post.id !== deleteId) : [];
         return axios.patch(`http://localhost:3000/users/${id}`, { posts: newPostList }).then(res => res.data);
       }
     }
